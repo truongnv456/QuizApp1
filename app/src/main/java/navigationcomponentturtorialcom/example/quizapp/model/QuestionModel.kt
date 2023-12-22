@@ -10,6 +10,4 @@ data class QuestionModel(
     val answer: String,
 
     var time: String
-) {
-
-}
+)

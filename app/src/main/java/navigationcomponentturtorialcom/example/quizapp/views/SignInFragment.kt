@@ -14,8 +14,9 @@ import com.google.android.material.textfield.TextInputEditText
 import navigationcomponentturtorialcom.example.quizapp.R
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 
+
 class SignInFragment : Fragment() {
-    private var viewModel: AuthViewModel? = null
+    private lateinit var viewModel: AuthViewModel
     private lateinit var btnSignIn: Button
     private var etEmailLogin: TextInputEditText? = null
     private var etPasswordLogin: TextInputEditText? = null
@@ -44,13 +45,15 @@ class SignInFragment : Fragment() {
             val passwordLogin: String = etPasswordLogin!!.text.toString()
 
             if (emailLogin.isNotEmpty() && passwordLogin.isNotEmpty()) {
-                viewModel!!.signIn(emailLogin, passwordLogin)
-                Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
-                viewModel!!.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
-                    findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+                viewModel.signIn(emailLogin, passwordLogin)
+                viewModel.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+                    }
                 }
+                Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Please Enter Email and Pass", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Email or Password is invalid", Toast.LENGTH_SHORT).show()
             }
         }
     }

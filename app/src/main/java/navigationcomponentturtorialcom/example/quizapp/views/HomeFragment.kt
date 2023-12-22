@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import navigationcomponentturtorialcom.example.quizapp.R
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 
 class HomeFragment : Fragment() {
+    private lateinit var viewModel: AuthViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -15,7 +15,7 @@ import navigationcomponentturtorialcom.example.quizapp.R
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 
 class SignUpFragment : Fragment() {
-    private var viewModel: AuthViewModel? = null
+    private lateinit var viewModel: AuthViewModel
     private var etEmailRegister: EditText? = null
     private var etPasswordRegister: EditText? = null
     private lateinit var btnRegister: Button
@@ -37,14 +37,15 @@ class SignUpFragment : Fragment() {
         btnRegister.setOnClickListener {
             val email = etEmailRegister!!.text.toString()
             val password: String = etPasswordRegister!!.text.toString()
-            if (!email.isEmpty() && !password.isEmpty()) {
-                viewModel!!.signUp(email, password)
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                viewModel.signUp(email, password)
                 Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-                viewModel!!.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
+                viewModel.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
                     findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
                 }
             } else {
-                Toast.makeText(context, "Please Enter Email and Pass", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please enter Email and Password", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
