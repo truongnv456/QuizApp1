@@ -7,41 +7,50 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import navigationcomponentturtorialcom.example.quizapp.R
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 
 class SignUpFragment : Fragment() {
-    lateinit var viewModel: AuthViewModel
-    lateinit var etEmailRegister: TextInputEditText
-    lateinit var etPasswordRegister: TextInputEditText
+    private var viewModel: AuthViewModel? = null
+    private var etEmailRegister: EditText? = null
+    private var etPasswordRegister: EditText? = null
+    private lateinit var btnRegister: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_sign_up, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_sign_up, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        etEmailRegister = view.findViewById<TextInputEditText>(R.id.etEmailRegister)
+        etPasswordRegister = view.findViewById<TextInputEditText>(R.id.etPasswordRegister)
+        btnRegister = view.findViewById<Button>(R.id.btnRegister)
 
-        etEmailRegister = view.findViewById(R.id.etEmailRegister)
-        etPasswordRegister = view.findViewById(R.id.etPasswordRegister)
-        view.findViewById<Button>(R.id.btnRegister).setOnClickListener {
-            val email = etEmailRegister.text.toString()
-            val password = etPasswordRegister.text.toString()
-
-            if (!!email.isEmpty() && !!password.isEmpty()) {
-                findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+        btnRegister.setOnClickListener {
+            val email = etEmailRegister!!.text.toString()
+            val password: String = etPasswordRegister!!.text.toString()
+            if (!email.isEmpty() && !password.isEmpty()) {
+                viewModel!!.signUp(email, password)
+                Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
+                viewModel!!.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
+                    findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+                }
             } else {
-                Toast.makeText(context, "Please Enter Email And Password", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Please Enter Email and Pass", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
     }
 }

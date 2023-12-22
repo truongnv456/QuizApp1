@@ -7,10 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputEditText
 import navigationcomponentturtorialcom.example.quizapp.R
+import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 
 class SignInFragment : Fragment() {
+    private var viewModel: AuthViewModel? = null
+    private lateinit var btnSignIn: Button
+    private var etEmailLogin: TextInputEditText? = null
+    private var etPasswordLogin: TextInputEditText? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,8 +31,32 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        etEmailLogin = view.findViewById<TextInputEditText>(R.id.etEmailLogin)
+        etPasswordLogin = view.findViewById<TextInputEditText>(R.id.etPasswordLogin)
+        btnSignIn = view.findViewById<Button>(R.id.btnSignIn)
+
         view.findViewById<TextView>(R.id.tvSignUp).setOnClickListener {
             findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
+
+        btnSignIn.setOnClickListener {
+            val emailLogin = etEmailLogin!!.text.toString()
+            val passwordLogin: String = etPasswordLogin!!.text.toString()
+
+            if (emailLogin.isNotEmpty() && passwordLogin.isNotEmpty()) {
+                viewModel!!.signIn(emailLogin, passwordLogin)
+                Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
+                viewModel!!.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
+                    findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
+                }
+            } else {
+                Toast.makeText(context, "Please Enter Email and Pass", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
     }
 }
