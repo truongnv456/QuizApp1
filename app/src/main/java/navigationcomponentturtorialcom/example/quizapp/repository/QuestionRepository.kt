@@ -10,11 +10,13 @@ class QuestionRepository() {
     private val questionList = firebaseFirestore.collection("Question")
 
     fun getQuestions(callback: (List<QuestionModel>?) -> Unit) {
-        questionList.get().addOnSuccessListener { documents ->
+        questionList
+            .get()
+            .addOnSuccessListener { documents ->
             var questionList = mutableListOf<QuestionModel>()
             for (document in documents) {
-                val question = document.toObject(QuestionModel::class.java)
-                questionList.add(question)
+                val questionModel = document.toObject(QuestionModel::class.java)
+                questionList.add(questionModel)
                 Log.d("GetQuestion", "On Success $questionList")
             }
             callback(questionList)

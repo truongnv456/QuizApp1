@@ -75,7 +75,5 @@ class SignInFragment : Fragment() {
             // Display error message if login fails
             Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
         }
-
     }
-
 }

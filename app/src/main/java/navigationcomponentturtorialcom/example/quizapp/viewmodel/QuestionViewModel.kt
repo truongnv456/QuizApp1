@@ -14,7 +14,7 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
     val questionMutableLiveData: LiveData<List<QuestionModel>> get() = _questionMutableLiveData
 
     private val _currentQuestionIndex = MutableLiveData<Int>()
-    val currentQuizIndex: LiveData<Int> get() = _currentQuestionIndex
+    val currentQuestionIndex: LiveData<Int> get() = _currentQuestionIndex
     init {
         _currentQuestionIndex.value = 0 // Set the initial quiz index to start from the first quiz
         getQuestions()
