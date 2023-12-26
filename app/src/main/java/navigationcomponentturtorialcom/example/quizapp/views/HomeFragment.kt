@@ -45,6 +45,5 @@ class HomeFragment : Fragment() {
         btnStartQuiz.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_questionFragment)
         }
-
     }
 }

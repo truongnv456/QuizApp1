@@ -1,10 +1,8 @@
 package navigationcomponentturtorialcom.example.quizapp.views
 
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,17 +38,17 @@ class QuestionFragment : Fragment() {
     val db = Firebase.firestore
 
     private lateinit var navController: NavController
-    private lateinit var optionAButton: Button
-    private lateinit var optionBButton: Button
-    private lateinit var optionCButton: Button
-    private lateinit var optionDButton: Button
-    private lateinit var finishButton: Button
-    private lateinit var nextButton: Button
-    private lateinit var questionTv: TextView
-    private lateinit var correctTv: TextView
-    private lateinit var wrongTv: TextView
-    private lateinit var timerCountTv: TextView
-    private var timer: CountDownTimer? = null
+    private lateinit var btnOptionA: Button
+    private lateinit var btnOptionB: Button
+    private lateinit var btnOptionC: Button
+    private lateinit var btnOptionD: Button
+    private lateinit var btnFinish: Button
+    private lateinit var btnNext: Button
+    private lateinit var tvQuestion: TextView
+    private lateinit var tvCorrect: TextView
+    private lateinit var tvWrong: TextView
+    private lateinit var tvTimerCount: TextView
+    private var timer: CountDownTimer ?= null
 
     private var correctAnswer = 0
     private var wrongAnswer = 0
@@ -67,16 +65,16 @@ class QuestionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = Navigation.findNavController(view)
-        optionAButton = view.findViewById(R.id.btnOptionA)
-        optionBButton = view.findViewById(R.id.btnOptionB)
-        optionCButton = view.findViewById(R.id.btnOptionC)
-        optionDButton = view.findViewById(R.id.btnOptionD)
-        finishButton = view.findViewById(R.id.btnFinish)
-        nextButton = view.findViewById(R.id.btnNext)
-        questionTv = view.findViewById(R.id.tvQuizDetail)
-        timerCountTv = view.findViewById(R.id.tvCountTimer)
-        correctTv = view.findViewById(R.id.tvCorrectNumber)
-        wrongTv = view.findViewById(R.id.tvWrongNumber)
+        btnOptionA = view.findViewById(R.id.btnOptionA)
+        btnOptionB = view.findViewById(R.id.btnOptionB)
+        btnOptionC = view.findViewById(R.id.btnOptionC)
+        btnOptionD = view.findViewById(R.id.btnOptionD)
+        btnFinish = view.findViewById(R.id.btnFinish)
+        btnNext = view.findViewById(R.id.btnNext)
+        tvQuestion = view.findViewById(R.id.tvQuizDetail)
+        tvTimerCount = view.findViewById(R.id.tvCountTimer)
+        tvCorrect = view.findViewById(R.id.tvCorrectNumber)
+        tvWrong = view.findViewById(R.id.tvWrongNumber)
 
         viewModel.questionMutableLiveData.observe(viewLifecycleOwner) { questions ->
             if (!questions.isNullOrEmpty()) {
@@ -85,7 +83,7 @@ class QuestionFragment : Fragment() {
             }
         }
         // Load the next question on button click
-        nextButton.setOnClickListener {
+        btnNext.setOnClickListener {
             val currentIndex = viewModel.currentQuestionIndex.value ?: 0
             if (currentIndex < (viewModel.questionMutableLiveData.value?.size ?: 0) - 1) {
                 viewModel.setCurrentQuestionIndex(currentIndex + 1)
@@ -105,16 +103,16 @@ class QuestionFragment : Fragment() {
     private fun displayQuestionData(questionModel: QuestionModel?) {
         if (questionModel != null) {
             // Display the question
-            questionTv.text = questionModel.question
+            tvQuestion.text = questionModel.question
             // Display the options
-            optionAButton.text = questionModel.optionA
-            optionBButton.text = questionModel.optionB
-            optionCButton.text = questionModel.optionC
-            optionDButton.text = questionModel.optionD
+            btnOptionA.text = questionModel.optionA
+            btnOptionB.text = questionModel.optionB
+            btnOptionC.text = questionModel.optionC
+            btnOptionD.text = questionModel.optionD
 
             resetTime()
 
-            val answerButtons = listOf(optionAButton, optionBButton, optionCButton, optionDButton)
+            val answerButtons = listOf(btnOptionA, btnOptionB, btnOptionC, btnOptionD)
 
             for (button in answerButtons) {
                 button.setOnClickListener {
@@ -134,10 +132,10 @@ class QuestionFragment : Fragment() {
 
     private fun getAnswerFromButton(button: Button): String {
         return when (button) {
-            optionAButton -> optionAButton.text.toString()
-            optionBButton -> optionBButton.text.toString()
-            optionCButton -> optionCButton.text.toString()
-            optionDButton -> optionDButton.text.toString()
+            btnOptionA -> btnOptionA.text.toString()
+            btnOptionB -> btnOptionB.text.toString()
+            btnOptionC -> btnOptionC.text.toString()
+            btnOptionD -> btnOptionD.text.toString()
             else -> ""
         }
     }
@@ -149,17 +147,16 @@ class QuestionFragment : Fragment() {
         timer = object : CountDownTimer(totalTimeMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = millisUntilFinished / 1000
-                timerCountTv.text = secondsRemaining.toString()
+                tvTimerCount.text = secondsRemaining.toString()
             }
 
             override fun onFinish() {
-                timerCountTv.text = "Hết thời gian!"
-                questionTv.text = "Sorry Time is up! Continue with next question."
+                tvTimerCount.text = "Hết thời gian!"
+                tvQuestion.text = "Sorry Time is up! Continue with next question."
                 wrongAnswer++
-                wrongTv.text = wrongAnswer.toString()
+                tvWrong.text = wrongAnswer.toString()
                 disableButton()
                 // Move to the next question when the time is up
-                nextButton.performClick()
             }
         }.start()
     }
@@ -178,28 +175,28 @@ class QuestionFragment : Fragment() {
         } else {
             wrongAnswer += 1
         }
-        correctTv.text = correctAnswer.toString()
-        wrongTv.text = wrongAnswer.toString()
+        tvCorrect.text = correctAnswer.toString()
+        tvWrong.text = wrongAnswer.toString()
     }
 
     private fun disableButton() {
-        optionAButton.isEnabled = false
-        optionBButton.isEnabled = false
-        optionCButton.isEnabled = false
-        optionDButton.isEnabled = false
+        btnOptionA.isEnabled = false
+        btnOptionB.isEnabled = false
+        btnOptionC.isEnabled = false
+        btnOptionD.isEnabled = false
     }
 
     private fun reset() {
         // Reset other UI elements or states as needed
-        optionAButton.isEnabled = true
-        optionBButton.isEnabled = true
-        optionCButton.isEnabled = true
-        optionDButton.isEnabled = true
+        btnOptionA.isEnabled = true
+        btnOptionB.isEnabled = true
+        btnOptionC.isEnabled = true
+        btnOptionD.isEnabled = true
         // Reset background color for all buttons to default color
-        optionAButton.setBackgroundColor(Color.WHITE)
-        optionBButton.setBackgroundColor(Color.WHITE)
-        optionCButton.setBackgroundColor(Color.WHITE)
-        optionDButton.setBackgroundColor(Color.WHITE)
+        btnOptionA.setBackgroundColor(Color.WHITE)
+        btnOptionB.setBackgroundColor(Color.WHITE)
+        btnOptionC.setBackgroundColor(Color.WHITE)
+        btnOptionD.setBackgroundColor(Color.WHITE)
     }
 
     private fun showDialog() {
@@ -213,7 +210,7 @@ class QuestionFragment : Fragment() {
         builder.setNegativeButton("FINISH") { _, _ ->
             navController.navigate(R.id.action_questionFragment_to_resultFragment)
         }
-
         builder.show()
+        builder.setCancelable(true)
     }
 }

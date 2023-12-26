@@ -7,6 +7,4 @@ class QuestionModel(
     val optionC: String = "",
     val optionD: String = "",
     val answer: String = "",
-
-    val timer: Long = 0
 )

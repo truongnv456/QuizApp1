@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import navigationcomponentturtorialcom.example.quizapp.R
@@ -27,8 +26,6 @@ class SignInFragment : Fragment() {
     private lateinit var tvSignUp: TextView
     private var etEmailLogin: TextInputEditText? = null
     private var etPasswordLogin: TextInputEditText? = null
-    private var correctAnswer = 0
-    private var wrongAnswer = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

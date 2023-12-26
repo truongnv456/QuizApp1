@@ -9,12 +9,11 @@ import navigationcomponentturtorialcom.example.quizapp.R
 import android.widget.Button
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 
 class ResultFragment : Fragment() {
     private lateinit var navController: NavController
-    private lateinit var playAgainButton: Button
-    private lateinit var exitButton: Button
+    private lateinit var btnPlayAgain: Button
+    private lateinit var btnExit: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,14 +26,14 @@ class ResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        playAgainButton = view.findViewById<Button>(R.id.btnPlayAgain)
-        exitButton = view.findViewById<Button>(R.id.btnExit)
+        btnPlayAgain = view.findViewById<Button>(R.id.btnPlayAgain)
+        btnExit = view.findViewById<Button>(R.id.btnExit)
 
-        playAgainButton.setOnClickListener {
+        btnPlayAgain.setOnClickListener {
             navController.navigate(R.id.action_resultFragment_to_questionFragment)
         }
 
-        exitButton.setOnClickListener {
+        btnExit.setOnClickListener {
             navController.navigate(R.id.action_resultFragment_to_homeFragment)
         }
     }
