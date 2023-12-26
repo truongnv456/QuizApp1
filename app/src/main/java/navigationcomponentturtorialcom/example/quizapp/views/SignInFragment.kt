@@ -27,6 +27,8 @@ class SignInFragment : Fragment() {
     private lateinit var tvSignUp: TextView
     private var etEmailLogin: TextInputEditText? = null
     private var etPasswordLogin: TextInputEditText? = null
+    private var correctAnswer = 0
+    private var wrongAnswer = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +61,7 @@ class SignInFragment : Fragment() {
             }
         }
 
-        viewModel.userLiveData.observe(viewLifecycleOwner){firebaseUser-> //tại sao k dùng this được (compile ERROR)
+        viewModel.userLiveData.observe(viewLifecycleOwner){ firebaseUser -> //tại sao k dùng this được (compile ERROR)
             if(firebaseUser != null){
                 Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signInFragment_to_homeFragment)

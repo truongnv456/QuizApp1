@@ -1,5 +1,6 @@
 package navigationcomponentturtorialcom.example.quizapp.views
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -40,7 +41,10 @@ class QuestionFragment : Fragment() {
     private lateinit var answerTv: TextView
     private lateinit var questionNumberTv: TextView
     private lateinit var timerCount: TextView
+    private lateinit var timer: CountDownTimer
 
+    private var correctAnswer = 0
+    private var wrongAnswer = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,10 +69,8 @@ class QuestionFragment : Fragment() {
 
         viewModel.questionMutableLiveData.observe(viewLifecycleOwner) { questions ->
             if (!questions.isNullOrEmpty()) {
-                Log.d("LiveDataUpdate", "Quizzes updated: $questions")
                 // Logic to display the first question when quizzes are loaded
-                displayQuizData(viewModel.getCurrentQuestion())
-                Log.d("OptionTest", "${viewModel.getCurrentQuestion()?.optionA}")
+                displayQuestionData(viewModel.getCurrentQuestion())
             }
         }
 
@@ -77,9 +79,11 @@ class QuestionFragment : Fragment() {
             val currentIndex = viewModel.currentQuizIndex.value ?: 0
             if (currentIndex < (viewModel.questionMutableLiveData.value?.size ?: 0) - 1) {
                 viewModel.setCurrentQuestionIndex(currentIndex + 1)
-                displayQuizData(viewModel.getCurrentQuestion())
+                resetUI()
+                displayQuestionData(viewModel.getCurrentQuestion())
             } else {
                 // Handle when all questions are finished
+                navController.navigate(R.id.action_questionFragment_to_resultFragment)
             }
         }
 
@@ -87,30 +91,99 @@ class QuestionFragment : Fragment() {
         viewModel.getQuestions()
     }
 
-    private fun displayQuizData(quizDetail: QuestionModel?) {
-        quizDetail?.let { it ->
+    private fun displayQuestionData(questionDetail: QuestionModel?) {
+        questionDetail?.let { questionModel ->
             // Display the question
-            questionTv.text = it.question
-
+            questionTv.text = questionModel.question
             // Display the options
-            optionAButton.text = it.optionA
-            optionBButton.text = it.optionB
-            optionCButton.text = it.optionC
-            optionDButton.text = it.optionD
+            optionAButton.text = questionModel.optionA
+            optionBButton.text = questionModel.optionB
+            optionCButton.text = questionModel.optionC
+            optionDButton.text = questionModel.optionD
+
+            optionAButton.setOnClickListener {
+                val currentQuestion = viewModel.getCurrentQuestion()
+
+                if (currentQuestion != null) {
+                    // Update UI based on whether the user answered correctly
+                    setButtonBackground(optionAButton, (currentQuestion.answer == questionModel.optionA))
+                    disableButton()
+                }
+            }
+            optionBButton.setOnClickListener {
+                val currentQuestion = viewModel.getCurrentQuestion()
+
+                if (currentQuestion != null) {
+                    // Update UI based on whether the user answered correctly
+                    setButtonBackground(optionBButton, (currentQuestion.answer == questionModel.optionB))
+                    disableButton()
+                }
+            }
+
+            optionCButton.setOnClickListener {
+                val currentQuestion = viewModel.getCurrentQuestion()
+
+                if (currentQuestion != null) {
+                    // Update UI based on whether the user answered correctly
+                    setButtonBackground(optionCButton, (currentQuestion.answer == questionModel.optionC))
+                    disableButton()
+                }
+            }
+
+            optionDButton.setOnClickListener {
+                val currentQuestion = viewModel.getCurrentQuestion()
+
+                if (currentQuestion != null) {
+                    // Update UI based on whether the user answered correctly
+                    setButtonBackground(optionDButton, (currentQuestion.answer == questionModel.optionD))
+                    disableButton()
+                }
+            }
 
             // Set up timer
-            val timer = object : CountDownTimer(it.timer * 1000, 1000) {
+            timer = object : CountDownTimer(questionModel.timer * 1000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     timerCount.text = (millisUntilFinished / 1000).toString()
                 }
 
                 override fun onFinish() {
                     timerCount.text = "Time's up!"
+                    disableButton()
                 }
             }
             timer.start()
 
             // Handle user option selection
         }
+    }
+
+    private fun setButtonBackground(button: Button, isTrue: Boolean) {
+        if (isTrue) {
+            button.setBackgroundColor(Color.GREEN)
+        } else {
+            button.setBackgroundColor(Color.RED)
+        }
+    }
+
+    private fun disableButton() {
+        optionAButton.isEnabled = false
+        optionBButton.isEnabled = false
+        optionCButton.isEnabled = false
+        optionDButton.isEnabled = false
+    }
+
+    private fun resetUI() {
+        // Reset background color for all buttons to default color
+        optionAButton.setBackgroundColor(Color.WHITE)
+        optionBButton.setBackgroundColor(Color.WHITE)
+        optionCButton.setBackgroundColor(Color.WHITE)
+        optionDButton.setBackgroundColor(Color.WHITE)
+
+        // Reset other UI elements or states as needed
+        optionAButton.isEnabled = true
+        optionBButton.isEnabled = true
+        optionCButton.isEnabled = true
+        optionDButton.isEnabled = true
+        timer?.cancel()
     }
 }

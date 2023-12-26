@@ -31,7 +31,8 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
     }
 
     fun getCurrentQuestion(): QuestionModel? {
-        return if (_questionMutableLiveData.value != null && _questionMutableLiveData.value!!.isNotEmpty() && _currentQuestionIndex.value != null) {
+        return if (_questionMutableLiveData.value != null &&
+            _questionMutableLiveData.value!!.isNotEmpty() && _currentQuestionIndex.value != null) {
             _questionMutableLiveData.value!![_currentQuestionIndex.value!!]
         } else {
             null

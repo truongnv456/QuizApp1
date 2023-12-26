@@ -47,7 +47,7 @@ class SignUpFragment : Fragment() {
                 viewModel.signUp(email, password)
             }
 
-            viewModel.userLiveData.observe(viewLifecycleOwner) { firebaseUser -> //tại sao k dùng this được (compile ERROR)
+            viewModel.userLiveData.observe(viewLifecycleOwner) { firebaseUser -> 
                 if (firebaseUser != null) {
                     findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
                 } else {
