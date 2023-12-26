@@ -9,20 +9,32 @@ import navigationcomponentturtorialcom.example.quizapp.model.QuestionModel
 import navigationcomponentturtorialcom.example.quizapp.repository.QuestionRepository
 
 
-class QuestionViewModel : ViewModel(), QuestionRepository.OnQuestionLoad {
-    private val _questionMutableLiveData = MutableLiveData<List<QuestionModel>>()
-    val questionMutableLiveData: MutableLiveData<List<QuestionModel>> get() = _questionMutableLiveData
+class QuestionViewModel(private val repository: QuestionRepository) : ViewModel() {
+    private var _questionMutableLiveData = MutableLiveData<List<QuestionModel>>()
+    val questionMutableLiveData: LiveData<List<QuestionModel>> get() = _questionMutableLiveData
 
-    private val repository = QuestionRepository(this)
-
-    fun setQuestionId(questionId: String) {
-        repository.setQuestionId(questionId)
-    }
-    override fun onLoad(questionModels: List<QuestionModel>?) {
-        _questionMutableLiveData.setValue(questionModels!!)
+    private val _currentQuestionIndex = MutableLiveData<Int>()
+    val currentQuizIndex: LiveData<Int> get() = _currentQuestionIndex
+    init {
+        _currentQuestionIndex.value = 0 // Set the initial quiz index to start from the first quiz
+        getQuestions()
     }
 
-    override fun onError(e: Exception?) {
-        Log.d("QuizError", "on Error:" + e!!.message)
+    fun getQuestions() {
+        repository.getQuestions { questionList ->
+            _questionMutableLiveData.postValue(questionList)
+        }
+    }
+
+    fun setCurrentQuestionIndex(index: Int) {
+        _currentQuestionIndex.value = index
+    }
+
+    fun getCurrentQuestion(): QuestionModel? {
+        return if (_questionMutableLiveData.value != null && _questionMutableLiveData.value!!.isNotEmpty() && _currentQuestionIndex.value != null) {
+            _questionMutableLiveData.value!![_currentQuestionIndex.value!!]
+        } else {
+            null
+        }
     }
 }

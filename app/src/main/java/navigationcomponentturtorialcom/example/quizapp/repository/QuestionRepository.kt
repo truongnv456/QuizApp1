@@ -1,28 +1,25 @@
 package navigationcomponentturtorialcom.example.quizapp.repository
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import navigationcomponentturtorialcom.example.quizapp.model.QuestionModel
 
 
-class QuestionRepository(private val onQuestionLoad: OnQuestionLoad) {
+class QuestionRepository() {
     private val firebaseFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private lateinit var questionId: String
+    private val questionList = firebaseFirestore.collection("Question")
 
-    fun setQuestionId(questionId: String) {
-        this.questionId = questionId
-    }
-
-    fun getQuestions() {
-        firebaseFirestore.collection("Question").get().addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onQuestionLoad.onLoad(task.result.toObjects(QuestionModel::class.java))
-                } else {
-                    onQuestionLoad.onError(task.exception)
-                }
+    fun getQuestions(callback: (List<QuestionModel>?) -> Unit) {
+        questionList.get().addOnSuccessListener { documents ->
+            var questionList = mutableListOf<QuestionModel>()
+            for (document in documents) {
+                val question = document.toObject(QuestionModel::class.java)
+                questionList.add(question)
+                Log.d("GetQuestion", "On Success $questionList")
             }
-    }
-    interface OnQuestionLoad {
-        fun onLoad(questionModels: List<QuestionModel>?)
-        fun onError(e: Exception?)
+            callback(questionList)
+        }.addOnFailureListener {
+            callback(null)
+        }
     }
 }
