@@ -1,3 +1,5 @@
 package navigationcomponentturtorialcom.example.quizapp.model
 
-data class ResultModel(var correct: Int, var wrong: Int)
+class ResultModel(var correct: Int, var wrong: Int) {
+
+}

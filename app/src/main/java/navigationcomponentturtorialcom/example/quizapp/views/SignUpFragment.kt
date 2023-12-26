@@ -8,14 +8,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import navigationcomponentturtorialcom.example.quizapp.R
+import navigationcomponentturtorialcom.example.quizapp.repository.AuthRepository
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
+import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModelFactory
 
 class SignUpFragment : Fragment() {
-    private lateinit var viewModel: AuthViewModel
+    private val viewModel by viewModels<AuthViewModel> {
+        AuthViewModelFactory(AuthRepository())
+    }
+
     private var etEmailRegister: EditText? = null
     private var etPasswordRegister: EditText? = null
     private lateinit var btnRegister: Button
@@ -39,19 +45,22 @@ class SignUpFragment : Fragment() {
             val password: String = etPasswordRegister!!.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 viewModel.signUp(email, password)
-                Toast.makeText(context, "Registered Successfully", Toast.LENGTH_SHORT).show()
-                viewModel.firebaseUserMutableLiveData.observe(viewLifecycleOwner) {
+            }
+
+            viewModel.userLiveData.observe(viewLifecycleOwner) { firebaseUser -> //tại sao k dùng this được (compile ERROR)
+                if (firebaseUser != null) {
                     findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
+                } else {
+                    Toast.makeText(requireContext(), "User data not available", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            } else {
-                Toast.makeText(context, "Please enter Email and Password", Toast.LENGTH_SHORT)
-                    .show()
+            }
+
+            viewModel.errorMessageLiveData.observe(viewLifecycleOwner) { errorMessage ->
+                // Display error message if login fails
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[AuthViewModel::class.java]
-    }
 }

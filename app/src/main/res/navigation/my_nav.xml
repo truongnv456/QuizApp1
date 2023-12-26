@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_splashFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
-<!--        <action-->
-<!--            android:id="@+id/action_splashFragment_to_signInFragment2"-->
-<!--            app:destination="@id/signInFragment" />-->
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -46,5 +43,17 @@
         <action
             android:id="@+id/action_homeFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_questionFragment"
+            app:destination="@id/questionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/questionFragment"
+        android:name="navigationcomponentturtorialcom.example.quizapp.views.QuestionFragment"
+        android:label="fragment_question"
+        tools:layout="@layout/fragment_question" >
+        <action
+            android:id="@+id/action_questionFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

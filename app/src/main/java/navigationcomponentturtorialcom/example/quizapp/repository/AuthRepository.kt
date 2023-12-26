@@ -6,37 +6,42 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class AuthRepository(private var application: Application) {
-    val firebaseUserMutableLiveData = MutableLiveData<FirebaseUser>()
-    private val firebaseAuth = FirebaseAuth.getInstance()
-    val currentUser = firebaseAuth.currentUser
+class AuthRepository() {
+    //    val firebaseUserMutableLiveData = MutableLiveData<FirebaseUser>()
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun signUp(email: String?, password: String?): Boolean {
-        if (email != null && password != null ) {
-            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+    fun signUp(
+        email: String,
+        password: String,
+        onComplete: (FirebaseUser?) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    firebaseUserMutableLiveData.postValue(firebaseAuth.currentUser)
+                    val currentUser = firebaseAuth.currentUser
+                    onComplete(currentUser)
                 } else {
-                    Toast.makeText(application, task.exception.toString(), Toast.LENGTH_SHORT).show()
+                    onError("Authentication failed")
                 }
             }
-            return true
-        }
-        return false
     }
 
-    fun signIn(email: String?, password: String?): Boolean {
-        if (email != null && password != null) {
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+    fun signIn(
+        email: String,
+        password: String,
+        onComplete: (FirebaseUser?) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    firebaseUserMutableLiveData.postValue(firebaseAuth.currentUser)
+                    val currentUser = firebaseAuth.currentUser
+                    onComplete(currentUser)
                 } else {
-                    Toast.makeText(application, task.exception.toString(), Toast.LENGTH_SHORT).show()
+                    onError("Authentication failed")
                 }
             }
-            return true
-        }
-        return false
     }
 
     fun signOut() {
