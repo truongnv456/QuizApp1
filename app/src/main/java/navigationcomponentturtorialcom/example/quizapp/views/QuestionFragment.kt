@@ -91,7 +91,7 @@ class QuestionFragment : Fragment() {
                 reset()
             } else {
                 val resultModel = ResultModel(correctAnswer, wrongAnswer)
-                resultViewModel.updateResults(resultModel)
+                resultViewModel.updateResult(resultModel)
                 // Handle when all questions are finished
                 showDialog()
             }

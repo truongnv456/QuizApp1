@@ -16,7 +16,6 @@ import navigationcomponentturtorialcom.example.quizapp.repository.AuthRepository
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModelFactory
 
-
 class SignInFragment : Fragment() {
     private val viewModel by viewModels<AuthViewModel>{
         AuthViewModelFactory(AuthRepository())
