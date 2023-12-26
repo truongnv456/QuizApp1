@@ -103,7 +103,7 @@ class QuestionFragment : Fragment() {
     }
 
     private fun displayQuestionData(questionModel: QuestionModel?) {
-        questionModel?.let { questionModel ->
+        if (questionModel != null) {
             // Display the question
             questionTv.text = questionModel.question
             // Display the options
@@ -113,9 +113,10 @@ class QuestionFragment : Fragment() {
             optionDButton.text = questionModel.optionD
 
             resetTime()
+
             val answerButtons = listOf(optionAButton, optionBButton, optionCButton, optionDButton)
 
-            answerButtons.forEach { button ->
+            for (button in answerButtons) {
                 button.setOnClickListener {
                     val currentQuestion = viewModel.getCurrentQuestion()
 
