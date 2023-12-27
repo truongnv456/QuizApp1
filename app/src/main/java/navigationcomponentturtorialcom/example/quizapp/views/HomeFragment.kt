@@ -7,22 +7,31 @@ import android.view.View
 import android.view.ViewGroup
 import navigationcomponentturtorialcom.example.quizapp.R
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import navigationcomponentturtorialcom.example.quizapp.repository.AuthGoogleRepository
 import navigationcomponentturtorialcom.example.quizapp.repository.AuthRepository
+import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthGoogleViewModel
+import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthGoogleViewModelFactory
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModel
 import navigationcomponentturtorialcom.example.quizapp.viewmodel.AuthViewModelFactory
 
 class HomeFragment : Fragment() {
-    private val viewModel by viewModels<AuthViewModel>{
+    private val viewModel by viewModels<AuthViewModel> {
         AuthViewModelFactory(AuthRepository())
+    }
+
+    private val googleViewModel by viewModels<AuthGoogleViewModel> {
+        AuthGoogleViewModelFactory(AuthGoogleRepository())
     }
 
     private lateinit var btnSignOut: Button
     private lateinit var btnStartQuiz: Button
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +48,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         btnSignOut.setOnClickListener {
             viewModel.signOut()
+            signOutWithGoogle()
             showSignOutDialog()
             findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
         }
@@ -46,6 +56,18 @@ class HomeFragment : Fragment() {
         btnStartQuiz.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_questionFragment)
         }
+        // Đảm bảo bạn đã khởi tạo GoogleSignInClient trong Fragment
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
+    }
+
+    private fun signOutWithGoogle() {
+        googleSignInClient.signOut()
     }
 
     // Hàm để hiển thị dialog khi sign out thành công

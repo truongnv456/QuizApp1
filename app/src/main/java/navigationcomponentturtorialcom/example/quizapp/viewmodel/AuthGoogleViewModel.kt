@@ -25,4 +25,8 @@ class AuthGoogleViewModel(private val repository: AuthGoogleRepository) : ViewMo
                 // Xử lý lỗi nếu cần
             })
     }
+
+    fun signOutWithGoogle() {
+        repository.signOutWithGoogle()
+    }
 }
