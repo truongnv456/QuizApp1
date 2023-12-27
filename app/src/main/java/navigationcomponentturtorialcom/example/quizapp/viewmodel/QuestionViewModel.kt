@@ -15,6 +15,7 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
 
     private val _currentQuestionIndex = MutableLiveData<Int>()
     val currentQuestionIndex: LiveData<Int> get() = _currentQuestionIndex
+
     init {
         _currentQuestionIndex.value = 0 // Set the initial quiz index to start from the first quiz
         getQuestions()
@@ -30,12 +31,14 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
         _currentQuestionIndex.value = index
     }
 
-    fun getCurrentQuestion(): QuestionModel? {
-        return if (_questionMutableLiveData.value != null &&
-            _questionMutableLiveData.value!!.isNotEmpty() && _currentQuestionIndex.value != null) {
-            _questionMutableLiveData.value!![_currentQuestionIndex.value!!]
-        } else {
-            null
-        }
+    fun getCurrentQuestion(): QuestionModel {
+        // Kiểm tra _questionMutableLiveData và _currentQuestionIndex có giá trị không null
+//        requireNotNull(_questionMutableLiveData.value) { "Danh sách câu hỏi không được null." }
+//        require(_questionMutableLiveData.value!!.isNotEmpty()) { "Danh sách câu hỏi không được trống." }
+//        requireNotNull(_currentQuestionIndex.value) { "Chỉ số câu hỏi không được null." }
+
+        // Trả về câu hỏi hiện tại từ danh sách
+        return _questionMutableLiveData.value!![_currentQuestionIndex.value!!]
     }
+
 }

@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import navigationcomponentturtorialcom.example.quizapp.R
 import navigationcomponentturtorialcom.example.quizapp.model.QuestionModel
 import navigationcomponentturtorialcom.example.quizapp.model.ResultModel
@@ -35,8 +33,6 @@ class QuestionFragment : Fragment() {
         ResultViewModelFactory(ResultRepository())
     }
 
-    val db = Firebase.firestore
-
     private lateinit var navController: NavController
     private lateinit var btnOptionA: Button
     private lateinit var btnOptionB: Button
@@ -48,7 +44,7 @@ class QuestionFragment : Fragment() {
     private lateinit var tvCorrect: TextView
     private lateinit var tvWrong: TextView
     private lateinit var tvTimerCount: TextView
-    private var timer: CountDownTimer ?= null
+    private var timer: CountDownTimer? = null
 
     private var correctAnswer = 0
     private var wrongAnswer = 0
@@ -85,6 +81,14 @@ class QuestionFragment : Fragment() {
         // Load the next question on button click
         btnNext.setOnClickListener {
             val currentIndex = viewModel.currentQuestionIndex.value ?: 0
+
+            // Kiểm tra xem người chơi có chọn đáp án hay không
+            if (isAnswerSelected()) {
+                // Nếu không chọn đáp án, tăng số câu trả lời sai
+                wrongAnswer++
+                tvWrong.text = wrongAnswer.toString()
+            }
+
             if (currentIndex < (viewModel.questionMutableLiveData.value?.size ?: 0) - 1) {
                 viewModel.setCurrentQuestionIndex(currentIndex + 1)
                 displayQuestionData(viewModel.getCurrentQuestion())
@@ -96,8 +100,15 @@ class QuestionFragment : Fragment() {
                 showDialog()
             }
         }
+
         // Fetch quizzes
         viewModel.getQuestions()
+    }
+
+    // Hàm kiểm tra xem người chơi đã chọn đáp án hay chưa
+    private fun isAnswerSelected(): Boolean {
+        // Bạn có thể thực hiện logic kiểm tra xem một trong các nút đáp án đã được chọn hay không
+        return btnOptionA.isEnabled && btnOptionB.isEnabled && btnOptionC.isEnabled && btnOptionD.isEnabled
     }
 
     private fun displayQuestionData(questionModel: QuestionModel?) {

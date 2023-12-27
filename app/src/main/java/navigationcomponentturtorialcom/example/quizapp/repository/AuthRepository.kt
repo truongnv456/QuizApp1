@@ -10,9 +10,7 @@ class AuthRepository() {
     //    val firebaseUserMutableLiveData = MutableLiveData<FirebaseUser>()
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun signUp(
-        email: String,
-        password: String,
+    fun signUp(email: String, password: String,
         onComplete: (FirebaseUser?) -> Unit,
         onError: (String) -> Unit
     ) {
@@ -27,9 +25,7 @@ class AuthRepository() {
             }
     }
 
-    fun signIn(
-        email: String,
-        password: String,
+    fun signIn(email: String, password: String,
         onComplete: (FirebaseUser?) -> Unit,
         onError: (String) -> Unit
     ) {

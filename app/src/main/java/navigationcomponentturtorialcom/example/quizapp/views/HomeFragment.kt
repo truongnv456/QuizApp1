@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import navigationcomponentturtorialcom.example.quizapp.R
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -38,12 +39,32 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         btnSignOut.setOnClickListener {
             viewModel.signOut()
+            showSignOutDialog()
             findNavController().navigate(R.id.action_homeFragment_to_signInFragment)
-            Toast.makeText(context,"Sign out is successful",Toast.LENGTH_SHORT).show()
         }
 
         btnStartQuiz.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_questionFragment)
         }
+    }
+
+    // Hàm để hiển thị dialog khi sign out thành công
+    private fun showSignOutDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+
+        // Thiết lập thông tin cho dialog
+        alertDialogBuilder.setTitle("Sign Out")
+        alertDialogBuilder.setMessage("Sign Out Successfully")
+
+        // Thiết lập nút đóng dialog
+        alertDialogBuilder.setPositiveButton("OK") { dialog, which ->
+            // Xử lý sự kiện khi người dùng nhấn nút OK
+            // Có thể thêm các thao tác khác ở đây nếu cần
+            dialog.dismiss() // Đóng dialog sau khi người dùng nhấn nút OK
+        }
+
+        // Tạo và hiển thị dialog
+        val alertDialog: AlertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 }

@@ -17,8 +17,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() { 
 
     fun signIn(email: String, password: String) {
         authRepository.signIn(email, password,
-            onComplete = { user ->
-                _userLiveData.postValue(user)
+            onComplete = { firebaseUser ->
+                _userLiveData.postValue(firebaseUser)
             },
             onError = { errorMessage ->
                 _errorMessageLiveData.postValue(errorMessage)
@@ -28,8 +28,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() { 
 
     fun signUp(email: String, password: String) {
         authRepository.signUp(email, password,
-            onComplete = { user ->
-                _userLiveData.postValue(user)
+            onComplete = { firebaseUser ->
+                _userLiveData.postValue(firebaseUser)
             },
             onError = { errorMessage ->
                 _errorMessageLiveData.postValue(errorMessage)

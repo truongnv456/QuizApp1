@@ -57,7 +57,7 @@ class SignInFragment : Fragment() {
             }
         }
 
-        viewModel.userLiveData.observe(viewLifecycleOwner){ firebaseUser -> //tại sao k dùng this được (compile ERROR)
+        viewModel.userLiveData.observe(viewLifecycleOwner){ firebaseUser ->
             if(firebaseUser != null){
                 Toast.makeText(context, "Welcome to Quiz Game", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_signInFragment_to_homeFragment)
