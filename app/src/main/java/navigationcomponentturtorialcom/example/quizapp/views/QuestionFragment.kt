@@ -93,9 +93,9 @@ class QuestionFragment : Fragment() {
             }
 
             if (currentIndex < (viewModel.questionMutableLiveData.value?.size ?: 0) - 1) {
-                displayQuestionData(viewModel.getCurrentQuestion())
                 answerQuestion = currentIndex + 1
                 viewModel.setCurrentQuestionIndex(answerQuestion)
+                displayQuestionData(viewModel.getCurrentQuestion())
                 reset()
             } else {
                 val resultModel = ResultModel(correctAnswer, wrongAnswer)
@@ -141,20 +141,17 @@ class QuestionFragment : Fragment() {
             btnOptionD.text = questionModel.optionD
 
             resetTime()
-
             val answerButtons = listOf(btnOptionA, btnOptionB, btnOptionC, btnOptionD)
 
             for (button in answerButtons) {
                 button.setOnClickListener {
                     val currentQuestion = viewModel.getCurrentQuestion()
 
-                    if (currentQuestion != null) {
-                        val isTrue = (currentQuestion.answer == getAnswerFromButton(button))
-                        updateScore(isTrue)
-                        setButtonBackground(button, isTrue)
-                        disableButton()
-                        // You may want to call resetButtonBackgrounds() here if you're moving to the next question
-                    }
+                    val isTrue = (currentQuestion.answer == getAnswerFromButton(button))
+                    updateScore(isTrue)
+                    setButtonBackground(button, isTrue)
+                    disableButton()
+                    // You may want to call resetButtonBackgrounds() here if you're moving to the next question
                 }
             }
         }
