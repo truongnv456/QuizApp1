@@ -8,4 +8,5 @@
     <string name="i_forgot_my_password">I forgot my password</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
+    <string name="default_web_client_id">782645959057-aal1188lrucafqp7pbqepmhqi2lb2rc3.apps.googleusercontent.com</string>
 </resources>

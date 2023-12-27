@@ -1,24 +1,23 @@
 package navigationcomponentturtorialcom.example.quizapp.repository
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
-class AuthGoogleRepository {
+class AuthGoogleRepository() {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-//    fun signInWithGoogle(): Task<AuthResult> {
-//        val signInRequest = BeginSignInRequest.builder()
-//            .setGoogleIdTokenRequestOptions(
-//                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                    .setSupported(true)
-//                    // Your server's client ID, not your Android client ID.
-//                    .setServerClientId(getString(R.string.your_web_client_id))
-//                    // Only show accounts previously used to sign in.
-//                    .setFilterByAuthorizedAccounts(true)
-//                    .build())
-//            .build()
-//    }
-//
-//    fun signOut() {
-//        auth.signOut()
-//    }
+    fun signInWithGoogle(
+        idToken: String,
+        onComplete: (Boolean) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        firebaseAuth.signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onComplete(task.isSuccessful)
+                } else {
+                    onError("Authentication failed")
+                }
+            }
+    }
 }

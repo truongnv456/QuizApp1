@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +26,7 @@ class SignUpFragment : Fragment() {
     private var etEmailRegister: EditText? = null
     private var etPasswordRegister: EditText? = null
     private lateinit var btnRegister: Button
+    private lateinit var btnBack: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +41,7 @@ class SignUpFragment : Fragment() {
         etEmailRegister = view.findViewById<TextInputEditText>(R.id.etEmailRegister)
         etPasswordRegister = view.findViewById<TextInputEditText>(R.id.etPasswordRegister)
         btnRegister = view.findViewById<Button>(R.id.btnRegister)
+        btnBack = view.findViewById<ImageButton>(R.id.btnBack)
 
         btnRegister.setOnClickListener {
             val email = etEmailRegister!!.text.toString()
@@ -60,6 +63,10 @@ class SignUpFragment : Fragment() {
                 // Display error message if login fails
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
+        }
+
+        btnBack.setOnClickListener {
+            findNavController().navigate(R.id.action_signUpFragment_to_signInFragment)
         }
     }
 

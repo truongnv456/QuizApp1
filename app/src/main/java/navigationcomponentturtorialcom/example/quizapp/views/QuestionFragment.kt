@@ -52,6 +52,7 @@ class QuestionFragment : Fragment() {
     private var currentIndex = 0
     private var answerQuestion = 0
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -193,6 +194,23 @@ class QuestionFragment : Fragment() {
             button.setBackgroundColor(Color.GREEN)
         } else {
             button.setBackgroundColor(Color.RED)
+
+            // Find and highlight the correct answer in green
+            val correctButton = findCorrectAnswerButton()
+            correctButton?.setBackgroundColor(Color.GREEN)
+        }
+    }
+
+    private fun findCorrectAnswerButton(): Button? {
+        val currentQuestion = viewModel.getCurrentQuestion()
+        val correctAnswerText = currentQuestion.answer
+
+        return when (correctAnswerText) {
+            btnOptionA.text.toString() -> btnOptionA
+            btnOptionB.text.toString() -> btnOptionB
+            btnOptionC.text.toString() -> btnOptionC
+            btnOptionD.text.toString() -> btnOptionD
+            else -> null
         }
     }
 

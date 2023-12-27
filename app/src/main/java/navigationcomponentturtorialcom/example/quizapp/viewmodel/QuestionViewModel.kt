@@ -32,11 +32,6 @@ class QuestionViewModel(private val repository: QuestionRepository) : ViewModel(
     }
 
     fun getCurrentQuestion(): QuestionModel {
-        // Kiểm tra _questionMutableLiveData và _currentQuestionIndex có giá trị không null
-//        requireNotNull(_questionMutableLiveData.value) { "Danh sách câu hỏi không được null." }
-//        require(_questionMutableLiveData.value!!.isNotEmpty()) { "Danh sách câu hỏi không được trống." }
-//        requireNotNull(_currentQuestionIndex.value) { "Chỉ số câu hỏi không được null." }
-
         // Trả về câu hỏi hiện tại từ danh sách
         return _questionMutableLiveData.value!![_currentQuestionIndex.value!!]
     }
