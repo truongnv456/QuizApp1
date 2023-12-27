@@ -20,4 +20,8 @@ class AuthGoogleRepository() {
                 }
             }
     }
+
+    fun signOutWithGoogle() {
+        firebaseAuth.signOut()
+    }
 }
