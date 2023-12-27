@@ -3,6 +3,7 @@ package navigationcomponentturtorialcom.example.quizapp.views
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,6 +49,8 @@ class QuestionFragment : Fragment() {
 
     private var correctAnswer = 0
     private var wrongAnswer = 0
+    private var currentIndex = 0
+    private var answerQuestion = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,8 +83,8 @@ class QuestionFragment : Fragment() {
         }
         // Load the next question on button click
         btnNext.setOnClickListener {
-            val currentIndex = viewModel.currentQuestionIndex.value ?: 0
-
+            currentIndex = viewModel.currentQuestionIndex.value ?: 0
+            Log.d("currentIndex", "{$currentIndex}")
             // Kiểm tra xem người chơi có chọn đáp án hay không
             if (isAnswerSelected()) {
                 // Nếu không chọn đáp án, tăng số câu trả lời sai
@@ -90,8 +93,9 @@ class QuestionFragment : Fragment() {
             }
 
             if (currentIndex < (viewModel.questionMutableLiveData.value?.size ?: 0) - 1) {
-                viewModel.setCurrentQuestionIndex(currentIndex + 1)
                 displayQuestionData(viewModel.getCurrentQuestion())
+                answerQuestion = currentIndex + 1
+                viewModel.setCurrentQuestionIndex(answerQuestion)
                 reset()
             } else {
                 val resultModel = ResultModel(correctAnswer, wrongAnswer)
@@ -101,6 +105,20 @@ class QuestionFragment : Fragment() {
             }
         }
 
+        btnFinish.setOnClickListener {
+            val unAnsweredQuestion = viewModel.questionMutableLiveData.value!!.size - answerQuestion
+
+            if (unAnsweredQuestion > 0) {
+                wrongAnswer += unAnsweredQuestion
+                tvWrong.text = wrongAnswer.toString()
+            }
+
+            val resultModel = ResultModel(correctAnswer, wrongAnswer)
+            resultViewModel.updateResult(resultModel)
+
+            showDialog()
+        }
+
         // Fetch quizzes
         viewModel.getQuestions()
     }
@@ -108,7 +126,8 @@ class QuestionFragment : Fragment() {
     // Hàm kiểm tra xem người chơi đã chọn đáp án hay chưa
     private fun isAnswerSelected(): Boolean {
         // Bạn có thể thực hiện logic kiểm tra xem một trong các nút đáp án đã được chọn hay không
-        return btnOptionA.isEnabled && btnOptionB.isEnabled && btnOptionC.isEnabled && btnOptionD.isEnabled
+        return btnOptionA.isEnabled && btnOptionB.isEnabled
+                && btnOptionC.isEnabled && btnOptionD.isEnabled
     }
 
     private fun displayQuestionData(questionModel: QuestionModel?) {
